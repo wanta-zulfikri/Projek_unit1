@@ -13,7 +13,8 @@ func (app *App) HomePegawai() {
 	fmt.Println("\n=============Pilih Menu Dibawah ini======================")
 	fmt.Println("1.Tambah Produk")
 	fmt.Println("2.Update Produk")
-	fmt.Println("3.Buat Nota")
+	fmt.Println("3.Tambah Customer")
+	fmt.Println("4.Buat Nota")
 	fmt.Scanln(&choice)
 	switch choice {
 	case 1:
