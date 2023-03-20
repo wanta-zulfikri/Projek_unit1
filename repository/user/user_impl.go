@@ -3,6 +3,7 @@ package user
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
@@ -18,16 +19,36 @@ func InitUser(db *sql.DB) UserInterface {
 
 func (u *User) FindByUsername(username string) (*entities.User, error) {
 	res := &entities.User{}
-	row := u.db.QueryRow("SELECT id,user_name,password,role FROM user WHERE deleted_at IS NULL AND user_name=?", username)
+	row := u.db.QueryRow("SELECT id,user_name,password,role FROM user WHERE user_name=?", username)
 	if row.Err() != nil {
-		return nil, errors.New("Username Tidak Terdaftar atau Akun Sudah Tidak Aktif")
+		return nil, errors.New("Username Tidak Terdaftar")
 	}
-	row.Scan(&res.Id, &res.Username, &res.Password, &res.Role)
+	err := row.Scan(&res.Id, &res.Username, &res.Password, &res.Role)
+	if err != nil {
+		return nil, err
+	}
 	return res, nil
 }
 func (u *User) GetAllByRole(role string) ([]*entities.User, error) {
 	res := []*entities.User{}
 	rows, err := u.db.Query("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL", role)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		row := &entities.User{}
+		err := rows.Scan(&row.Id, &row.Username, &row.Password, &row.Role)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, row)
+	}
+	return res, nil
+}
+
+func (u *User) GetAllByRoleLimit(role string, offset int) ([]*entities.User, error) {
+	res := []*entities.User{}
+	rows, err := u.db.Query(fmt.Sprintf("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL LIMIT 5 OFFSET %d", offset), role)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +105,7 @@ func (u *User) Update(data *entities.User, userid int) error {
 	return errors.New("User tidak berhasil Update")
 }
 func (u *User) Delete(userid int) error {
-	res, err := u.db.Exec("UPDATE user set created_at=? WHERE id=?", time.Now(), userid)
+	res, err := u.db.Exec("UPDATE user set deleted_at=? WHERE id=?", time.Now(), userid)
 	if err != nil {
 		return err
 	}
