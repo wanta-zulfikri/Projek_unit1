@@ -1,6 +1,6 @@
 {
     "db": {
-      "name": "mydb",
+      "name": "project1",
       "port": "3306",
       "driver": "mysql",
       "password": ""
