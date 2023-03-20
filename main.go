@@ -11,7 +11,7 @@ import (
 
 func main() {
 	DB := db.InitDb()
-	migration.Migration(DB)
+	migration.Migration()
 	InitUser := user.InitUser(DB)
 	var choice int
 	defer DB.Close()

@@ -11,7 +11,7 @@ import (
 
 type App struct {
 	usersRepo  user.UserInterface
-	Session    map[string]entities.User
+	Session    map[string]*entities.User
 	Scanner    *bufio.Scanner
 	MainChoice *int
 }
@@ -19,7 +19,7 @@ type App struct {
 func InitApp(UserRepo user.UserInterface, MainChoice *int) *App {
 	return &App{
 		usersRepo:  UserRepo,
-		Session:    make(map[string]entities.User, 0),
+		Session:    make(map[string]*entities.User, 0),
 		Scanner:    bufio.NewScanner(os.Stdin),
 		MainChoice: MainChoice,
 	}

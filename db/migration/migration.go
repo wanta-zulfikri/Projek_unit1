@@ -1,12 +1,12 @@
 package migration
 
 import (
-	"database/sql"
-
+	"github.com/wanta-zulfikri/Projek_unit1/db"
 	"github.com/wanta-zulfikri/Projek_unit1/helper"
 )
 
-func Migration(db *sql.DB) {
+func Migration() {
+	db := db.InitDb()
 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS user (
 		id int not null auto_increment,
 		user_name VARCHAR (50) not null, 
