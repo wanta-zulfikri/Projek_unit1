@@ -22,7 +22,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("5.Hapus Pelanggan")
 	fmt.Println("6.Tambah Produk")
 	fmt.Println("7.Update Produk")
-	fmt.Println("3.Tambah Produk")
+	fmt.Println("8.Edit Pelanggan")
 	fmt.Println("4.Tambah Produk")
 	fmt.Println("5.Tambah Produk")
 	fmt.Println("6.Hapus Pegawai")
@@ -46,11 +46,14 @@ func (admin *App) HomeAdmin() {
 		return
 	case 6:
 		admin.TambahProduk()
-		
-	case 7: 
+		return
+
+	case 7:
 		admin.UpdateProduk()
+
+	case 8:
+		admin.UpdateCustomer()
 	}
-	
 
 }
 
@@ -234,7 +237,7 @@ func (admin *App) UpdatePegawai() {
 	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Di Update: ")
 	fmt.Scanln(&choice)
 	if helper.IsNotInt(choice) {
-		fmt.Print("Username sudah tersedia,apakah ingin mengulang (y/t)? ")
+		fmt.Print("Masukan pilihan yang benar!!. Apakah ingin mengulang (y/t)? ")
 		fmt.Scanln(&choice)
 		if choice == "y" {
 			admin.UpdatePegawai()

@@ -53,7 +53,7 @@ func (cus *Customer) Create(data *entities.Customer) error {
 
 func (cus *Customer) Update(data *entities.Customer) error {
 
-	row, err := cus.db.Exec("UPDATE customer SET nama=?,alamat=? WHERE id=?", data.Nama, data.Alamat, data.Id)
+	row, err := cus.db.Exec("UPDATE customer SET nama=?,alamat=?,no_hp=? WHERE id=?", data.Nama, data.Alamat, data.NoHp, data.Id)
 	if err != nil {
 		return errors.New("Data tidak berhasil dibuat")
 	}
