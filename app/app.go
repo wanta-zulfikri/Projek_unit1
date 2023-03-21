@@ -6,24 +6,27 @@ import (
 	"os"
 
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
+	"github.com/wanta-zulfikri/Projek_unit1/repository/produk"
 	"github.com/wanta-zulfikri/Projek_unit1/repository/user"
 )
 
 type App struct {
-	usersRepo     user.UserInterface
-	Session       map[string]*entities.User
-	Scanner       *bufio.Scanner
+	usersRepo  user.UserInterface
+	ProdukRepo produk.ProdukInterface
+	Session    map[string]*entities.User
+	Scanner    *bufio.Scanner
+	MainChoice *int
 	OffsetContent int
 	PageContent   int
-	MainChoice    *int
 }
 
-func InitApp(UserRepo user.UserInterface, MainChoice *int) *App {
+func InitApp(UserRepo user.UserInterface, ProdukRepo produk.ProdukInterface, MainChoice *int) *App {
 	return &App{
-		usersRepo:     UserRepo,
-		Session:       make(map[string]*entities.User, 0),
-		Scanner:       bufio.NewScanner(os.Stdin),
-		MainChoice:    MainChoice,
+		usersRepo:  UserRepo,
+		ProdukRepo: ProdukRepo,
+		Session:    make(map[string]*entities.User, 0),
+		Scanner:    bufio.NewScanner(os.Stdin),
+		MainChoice: MainChoice,
 		OffsetContent: 0,
 		PageContent:   1,
 	}
@@ -48,3 +51,5 @@ func (app *App) Home() {
 	}
 
 }
+
+
