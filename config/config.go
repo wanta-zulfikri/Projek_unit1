@@ -11,7 +11,6 @@ var (
 	DbPort     string
 	DbDriver   string
 	DbPassword string
-	LimitPage  int
 )
 
 func init() {
@@ -26,6 +25,4 @@ func init() {
 	DbPort = viper.GetString("db.port")
 	DbDriver = viper.GetString("db.driver")
 	DbPassword = viper.GetString("db.password")
-	LimitPage = viper.GetInt("page.limit")
-
 }

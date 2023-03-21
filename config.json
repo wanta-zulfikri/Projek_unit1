@@ -1,11 +1,8 @@
 {
     "db": {
-      "name": "project1",
+      "name": "Projek_unit1",
       "port": "3306",
       "driver": "mysql",
-      "password": ""
-    },
-    "page" :{
-      "limit":5
+      "password": "golang"
     }
 }

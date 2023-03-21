@@ -13,7 +13,7 @@ func (app *App) Login() {
 	fmt.Scanln(&username)
 	data, err := app.usersRepo.FindByUsername(username)
 	if err != nil {
-		fmt.Println("Username Tidak Ditemukan")
+		fmt.Println(err.Error())
 		fmt.Print("Login Again?(y/t): ")
 		fmt.Scanln(&Repeatlogin)
 		if Repeatlogin == "y" {
