@@ -3,7 +3,9 @@ package helper
 import (
 	"fmt"
 	"math"
+	"strconv"
 
+	"github.com/wanta-zulfikri/Projek_unit1/config"
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
 )
 
@@ -28,10 +30,14 @@ func PrintData(datas interface{}) {
 }
 
 func CalculatePage(length int) int {
-	return int(math.Ceil(float64(length) / float64(5)))
+	return int(math.Ceil(float64(length) / float64(config.LimitPage)))
 }
 
 func ResetValue(old1 *int, old2 *int, new ...int) {
 	*old1 = new[0]
 	*old2 = new[1]
+}
+func ConvertStringToInt(data string) int {
+	res, _ := strconv.Atoi(data)
+	return res
 }

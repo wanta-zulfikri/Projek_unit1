@@ -2,10 +2,10 @@ package app
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
+	"github.com/wanta-zulfikri/Projek_unit1/config"
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
 	"github.com/wanta-zulfikri/Projek_unit1/helper"
 )
@@ -28,6 +28,9 @@ func (admin *App) HomeAdmin() {
 	switch choice {
 	case 1:
 		admin.TambahPegawai()
+		return
+	case 2:
+		admin.UpdatePegawai()
 		return
 	case 3:
 		admin.HapusPegawai()
@@ -92,7 +95,7 @@ func (admin *App) HapusPegawai() {
 		fmt.Scanln(&choice)
 		if choice == "L" {
 			admin.PageContent++
-			admin.OffsetContent += 5
+			admin.OffsetContent += config.LimitPage
 			admin.HapusPegawai()
 			return
 		}
@@ -101,7 +104,7 @@ func (admin *App) HapusPegawai() {
 		fmt.Scanln(&choice)
 		if choice == "K" {
 			admin.PageContent--
-			admin.OffsetContent -= 5
+			admin.OffsetContent -= config.LimitPage
 			admin.HapusPegawai()
 			return
 		}
@@ -112,8 +115,7 @@ func (admin *App) HapusPegawai() {
 	if strings.Contains(choice, ",") {
 		ids := strings.Split(choice, ",")
 		for i, val := range ids {
-			toint, _ := strconv.Atoi(val)
-			toint -= 1
+			toint := helper.ConvertStringToInt(val) - 1
 			err := admin.usersRepo.Delete(datas[toint].Id)
 			if err != nil {
 				fmt.Printf("Id %d Tidak terdaftar\n", datas[toint].Id)
@@ -142,8 +144,7 @@ func (admin *App) HapusPegawai() {
 		admin.HomeAdmin()
 		return
 	}
-	toint, _ := strconv.Atoi(choice)
-	err := admin.usersRepo.Delete(datas[toint-1].Id)
+	err := admin.usersRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 	if err != nil {
 		fmt.Println("Masukan Data Yang Benar!!!")
@@ -164,4 +165,95 @@ func (admin *App) HapusPegawai() {
 	fmt.Println("Anda akan diarahkan ke halaman utama")
 	time.Sleep(time.Second * 2)
 	admin.HomeAdmin()
+}
+
+func (admin *App) UpdatePegawai() {
+	var choice, username, password string
+	fmt.Print("\x1bc")
+	fmt.Println("=============FORM UPDATE PEGAWAI=================")
+	fmt.Println()
+	lenght, _ := admin.usersRepo.GetAllByRole("pegawai")
+	page := helper.CalculatePage(len(lenght))
+	datas, _ := admin.usersRepo.GetAllByRoleLimit("pegawai", admin.OffsetContent)
+	if len(lenght) == 0 {
+		fmt.Println("Data Pergawai Belum Ada")
+		fmt.Print("Apakah anda ingin menambahkan data pegawai? (y/t): ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			admin.TambahPegawai()
+			return
+		}
+		admin.HomeAdmin()
+		return
+	}
+	helper.PrintData(datas)
+	if page > admin.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Tidak Tekan Enter : ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			admin.PageContent++
+			admin.OffsetContent += config.LimitPage
+			admin.UpdatePegawai()
+			return
+		}
+	} else if admin.PageContent != 1 || (admin.PageContent == page && page > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			admin.PageContent--
+			admin.OffsetContent -= config.LimitPage
+			admin.UpdatePegawai()
+			return
+		}
+	}
+	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Di Update: ")
+	fmt.Scanln(&choice)
+	fmt.Print("Masukan Username Baru (Enter Untuk Skip) : ")
+	fmt.Scanln(&username)
+	if username == "" {
+		username = datas[helper.ConvertStringToInt(choice)-1].Username
+	} else {
+		data, err := admin.usersRepo.FindByUsername(username)
+		if err == nil && data.Username != datas[helper.ConvertStringToInt(choice)-1].Username {
+			fmt.Print("Username sudah tersedia,apakah ingin mengulang (y/t)? ")
+			fmt.Scanln(&choice)
+			if choice == "y" {
+				admin.UpdatePegawai()
+				return
+			}
+			fmt.Println("Anda akan diarahkan ke halaman utama")
+			time.Sleep(3 * time.Second)
+			admin.HomeAdmin()
+			return
+		}
+	}
+	fmt.Print("Masukan Password Baru Anda (Enter Untuk Skip): ")
+	fmt.Scanln(&password)
+	if password == "" {
+		password = datas[helper.ConvertStringToInt(choice)-1].Password
+	}
+	err := admin.usersRepo.Update(&entities.User{Username: username, Password: password}, datas[helper.ConvertStringToInt(choice)-1].Id)
+
+	if err != nil {
+		fmt.Print("Gagal mengupdate user, apakah anda ingin mencoba lagi? (y/t) :  ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			admin.UpdatePegawai()
+			return
+		}
+		fmt.Println("Anda akan diarahakan ke menu utama")
+		time.Sleep(3 * time.Second)
+		admin.HomeAdmin()
+		return
+	}
+	fmt.Print("Berhasil Mengupdate Data Pegawai, apakah anda ingin mencoba lagi? (y/t) :  ")
+	fmt.Scanln(&choice)
+	if choice == "y" {
+		admin.UpdatePegawai()
+		return
+	}
+	fmt.Println("Anda akan diarahakan ke menu utama")
+	time.Sleep(3 * time.Second)
+	admin.HomeAdmin()
+	return
 }

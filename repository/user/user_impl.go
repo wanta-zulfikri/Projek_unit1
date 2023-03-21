@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/wanta-zulfikri/Projek_unit1/config"
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
 )
 
@@ -48,7 +49,7 @@ func (u *User) GetAllByRole(role string) ([]*entities.User, error) {
 
 func (u *User) GetAllByRoleLimit(role string, offset int) ([]*entities.User, error) {
 	res := []*entities.User{}
-	rows, err := u.db.Query(fmt.Sprintf("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL LIMIT 5 OFFSET %d", offset), role)
+	rows, err := u.db.Query(fmt.Sprintf("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL LIMIT %d OFFSET %d", config.LimitPage, offset), role)
 	if err != nil {
 		return nil, err
 	}
