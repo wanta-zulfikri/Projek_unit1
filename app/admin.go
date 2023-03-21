@@ -18,7 +18,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("1.Tambah Pegawai")
 	fmt.Println("2.Update Pegawai")
 	fmt.Println("3.Hapus Pegawai")
-	fmt.Println("2.Update Produk")
+	fmt.Println("4.Tambah Customer")
 	fmt.Println("3.Tambah Produk")
 	fmt.Println("4.Tambah Produk")
 	fmt.Println("5.Tambah Produk")
@@ -34,6 +34,9 @@ func (admin *App) HomeAdmin() {
 		return
 	case 3:
 		admin.HapusPegawai()
+		return
+	case 4:
+		admin.TambahCustomer()
 		return
 	}
 
@@ -115,6 +118,16 @@ func (admin *App) HapusPegawai() {
 	if strings.Contains(choice, ",") {
 		ids := strings.Split(choice, ",")
 		for i, val := range ids {
+			if helper.IsNotInt(val) {
+				fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
+				fmt.Scanln(&choice)
+				if choice == "y" {
+					admin.HapusPegawai()
+				}
+				fmt.Println("Kamu Akan diarahkan ke halaman utama")
+				time.Sleep(time.Second * 3)
+				admin.HapusPegawai()
+			}
 			toint := helper.ConvertStringToInt(val) - 1
 			err := admin.usersRepo.Delete(datas[toint].Id)
 			if err != nil {
@@ -208,6 +221,18 @@ func (admin *App) UpdatePegawai() {
 	}
 	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Di Update: ")
 	fmt.Scanln(&choice)
+	if helper.IsNotInt(choice) {
+		fmt.Print("Username sudah tersedia,apakah ingin mengulang (y/t)? ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			admin.UpdatePegawai()
+			return
+		}
+		fmt.Println("Anda akan diarahkan ke halaman utama")
+		time.Sleep(3 * time.Second)
+		admin.HomeAdmin()
+		return
+	}
 	fmt.Print("Masukan Username Baru (Enter Untuk Skip) : ")
 	fmt.Scanln(&username)
 	if username == "" {

@@ -36,6 +36,7 @@ func (u *User) GetAllByRole(role string) ([]*entities.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	rows.Next()
 	for rows.Next() {
 		row := &entities.User{}
 		err := rows.Scan(&row.Id, &row.Username, &row.Password, &row.Role)
@@ -53,6 +54,7 @@ func (u *User) GetAllByRoleLimit(role string, offset int) ([]*entities.User, err
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	for rows.Next() {
 		row := &entities.User{}
 		err := rows.Scan(&row.Id, &row.Username, &row.Password, &row.Role)

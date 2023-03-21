@@ -3,6 +3,7 @@ package helper
 import (
 	"fmt"
 	"math"
+	"regexp"
 	"strconv"
 
 	"github.com/wanta-zulfikri/Projek_unit1/config"
@@ -37,7 +38,18 @@ func ResetValue(old1 *int, old2 *int, new ...int) {
 	*old1 = new[0]
 	*old2 = new[1]
 }
-func ConvertStringToInt(data string) int {
-	res, _ := strconv.Atoi(data)
+func ConvertStringToInt(stringg string) int {
+	res, _ := strconv.Atoi(stringg)
 	return res
+}
+func IsNotInt(stringg string) bool {
+	regex, _ := regexp.Compile(`([a-zA-Z&*=\(\)\[\-\_\/\]\>\.\,\<\{\}~^%$#@!\\]+)`)
+	return regex.MatchString(stringg)
+}
+
+func IsEmpty(stringg string) bool {
+	if len(stringg) < 1 {
+		return true
+	}
+	return false
 }
