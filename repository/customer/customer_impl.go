@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/wanta-zulfikri/Projek_unit1/config"
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
@@ -19,7 +20,7 @@ func InitProduk(db *sql.DB) CustomerInterface {
 
 func (cus *Customer) GetAll() ([]*entities.Customer, error) {
 	res := []*entities.Customer{}
-	rows, err := cus.db.Query("SELECT id,nama,alamat,no_hp from user WHERE deleted_at IS NULL")
+	rows, err := cus.db.Query("SELECT id,nama,alamat,no_hp from customer WHERE deleted_at IS NULL")
 	if err != nil {
 		return nil, errors.New("Gagal mengambil data")
 	}
@@ -27,6 +28,7 @@ func (cus *Customer) GetAll() ([]*entities.Customer, error) {
 	for rows.Next() {
 		row := &entities.Customer{}
 		err := rows.Scan(&row.Id, &row.Nama, &row.Alamat, &row.NoHp)
+
 		if err != nil {
 			return nil, errors.New("Gagal Mengambil data")
 		}
@@ -63,7 +65,7 @@ func (cus *Customer) Update(data *entities.Customer) error {
 }
 
 func (cus *Customer) Delete(userid int) error {
-	row, err := cus.db.Exec("UPDATE customer SET deleted_at WHERE id=?")
+	row, err := cus.db.Exec("UPDATE customer SET deleted_at=? WHERE id=?", time.Now(), userid)
 	if err != nil {
 		return errors.New("Data tidak berhasil dihapus")
 	}
@@ -87,7 +89,7 @@ func (cus *Customer) FindByPhone(phonenum string) (*entities.Customer, error) {
 	return res, nil
 }
 
-func (u *Customer) GetWithLimit(role string, offset int) ([]*entities.Customer, error) {
+func (u *Customer) GetWithLimit(offset int) ([]*entities.Customer, error) {
 	res := []*entities.Customer{}
 	rows, err := u.db.Query(fmt.Sprintf("SELECT id,nama,alamat,no_hp from customer WHERE deleted_at IS NULL LIMIT %d OFFSET %d", config.LimitPage, offset))
 	if err != nil {

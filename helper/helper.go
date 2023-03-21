@@ -28,6 +28,12 @@ func PrintData(datas interface{}) {
 			fmt.Printf("%d. Nama Pegawai : %s , Password Pegawai: %s\n", i+1, val.Username, val.Password)
 		}
 	}
+	if datas, ok := datas.([]*entities.Customer); ok {
+		fmt.Println("Berikut List Customer: ")
+		for i, val := range datas {
+			fmt.Printf("%d. Nama Customer : %s\nDetail :\nAlamat: %s\nNo HP : %s\n\n", i+1, val.Nama, val.Alamat, val.NoHp)
+		}
+	}
 }
 
 func CalculatePage(length int) int {
