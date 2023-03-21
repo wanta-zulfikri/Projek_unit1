@@ -20,6 +20,9 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("3.Hapus Pegawai")
 	fmt.Println("4.Tambah Pelanggan")
 	fmt.Println("5.Hapus Pelanggan")
+	fmt.Println("6.Tambah Produk")
+	fmt.Println("7.Update Produk")
+	fmt.Println("3.Tambah Produk")
 	fmt.Println("4.Tambah Produk")
 	fmt.Println("5.Tambah Produk")
 	fmt.Println("6.Hapus Pegawai")
@@ -41,7 +44,13 @@ func (admin *App) HomeAdmin() {
 	case 5:
 		admin.DeleteCustomer()
 		return
+	case 6:
+		admin.TambahProduk()
+		
+	case 7: 
+		admin.UpdateProduk()
 	}
+	
 
 }
 
