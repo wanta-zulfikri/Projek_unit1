@@ -206,3 +206,114 @@ func (cus *App) DeleteCustomer() {
 	cus.HomePegawai()
 	return
 }
+
+func (cus *App) UpdateCustomer() {
+	key := helper.GetUser(cus.Session)
+	var choice, name, address, phonenum string
+	fmt.Print("\x1bc")
+	fmt.Println("=============FORM UPDATE CUSTOMER=================")
+	fmt.Println()
+	lenght, _ := cus.CusRepo.GetAll()
+	page := helper.CalculatePage(len(lenght))
+	datas, _ := cus.CusRepo.GetWithLimit(cus.OffsetContent)
+	if len(lenght) == 0 {
+		fmt.Println("Data Customer Belum Ada")
+		fmt.Print("Apakah anda ingin menambahkan data pegawai? (y/t): ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			cus.UpdateCustomer()
+			return
+		}
+		fmt.Println("Anda Akan Diarahkan Ke Halaman Utama")
+		time.Sleep(3 * time.Second)
+		if cus.Session[key].Role == "admin" {
+			cus.HomeAdmin()
+		}
+		cus.HomePegawai()
+		return
+	}
+	helper.PrintData(datas)
+	if page > cus.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Tidak Tekan Enter : ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			cus.PageContent++
+			cus.OffsetContent += config.LimitPage
+			cus.UpdateCustomer()
+			return
+		}
+	} else if cus.PageContent != 1 || (cus.PageContent == page && page > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			cus.PageContent--
+			cus.OffsetContent -= config.LimitPage
+			cus.UpdateCustomer()
+			return
+		}
+	}
+	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Di Update: ")
+	fmt.Scanln(&choice)
+	if helper.IsNotInt(choice) {
+		fmt.Print("Masukan pilihan yang benar!!. Apakah ingin mengulang (y/t)? ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			cus.UpdateCustomer()
+			return
+		}
+		fmt.Println("Anda akan diarahkan ke halaman utama")
+		time.Sleep(3 * time.Second)
+		if cus.Session[key].Role == "admin" {
+			cus.HomeAdmin()
+		}
+		cus.HomePegawai()
+		return
+	}
+	fmt.Print("Masukan Nama Baru (Enter Untuk Skip) : ")
+	cus.Scanner.Scan()
+	name = cus.Scanner.Text()
+	if name == "" {
+		name = datas[helper.ConvertStringToInt(choice)-1].Nama
+	}
+	fmt.Print("Masukan Alamat Baru (Enter Untuk Skip): ")
+	cus.Scanner.Scan()
+	address = cus.Scanner.Text()
+	if address == "" {
+		address = datas[helper.ConvertStringToInt(choice)-1].Alamat
+	}
+	fmt.Print("Masukan No Hp Baru (Enter Untuk Skip): ")
+	cus.Scanner.Scan()
+	phonenum = cus.Scanner.Text()
+	if phonenum == "" {
+		address = datas[helper.ConvertStringToInt(choice)-1].NoHp
+	}
+	err := cus.CusRepo.Update(&entities.Customer{NoHp: phonenum, Nama: name, Alamat: address, Id: datas[helper.ConvertStringToInt(choice)-1].Id})
+
+	if err != nil {
+		fmt.Print("Gagal mengupdate user, apakah anda ingin mencoba lagi? (y/t) :  ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			cus.UpdateCustomer()
+			return
+		}
+		fmt.Println("Anda akan diarahakan ke menu utama")
+		time.Sleep(3 * time.Second)
+		if cus.Session[key].Role == "admin" {
+			cus.HomeAdmin()
+		}
+		cus.HomePegawai()
+	}
+	fmt.Print("Berhasil Mengupdate Data Pegawai, apakah anda ingin mencoba lagi? (y/t) :  ")
+	fmt.Scanln(&choice)
+	if choice == "y" {
+		cus.UpdateCustomer()
+		return
+	}
+	fmt.Println("Anda akan diarahakan ke menu utama")
+	if cus.Session[key].Role == "admin" {
+		cus.HomeAdmin()
+	}
+	cus.HomePegawai()
+	return
+
+}

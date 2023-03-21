@@ -58,10 +58,13 @@ func ConvertStringToInt(stringg string) int {
 	return res
 }
 func IsNotInt(stringg string) bool {
-	regex, _ := regexp.Compile(`([a-zA-Z&*=\(\)\[\-\_\/\]\>\.\,\<\{\}~^%$#@!\\]+)`)
+	if len(stringg) == 0 {
+		return true
+	}
+	regex, _ := regexp.Compile(`([a-zA-Z&*=\"\'\^\(\)\[\-\_\/\]\>\.\,\<\{\}~^%$#@!\\]+)`)
 	return regex.MatchString(stringg)
-}																										
-																										
+}
+
 func IsEmpty(stringg string) bool {
 	if stringg == "" {
 		return true
