@@ -34,6 +34,15 @@ func PrintData(datas interface{}) {
 			fmt.Printf("%d. Nama Customer : %s\nDetail :\nAlamat: %s\nNo HP : %s\n\n", i+1, val.Nama, val.Alamat, val.NoHp)
 		}
 	}
+	if datas, ok := datas.([]*entities.Produk); ok {
+		fmt.Println("Berikut List Produk: ")
+		for i, val := range datas {
+			if !val.Nama_Pengganti.Valid {
+				val.Nama_Pengganti.String = "Belum Ada"
+			}
+			fmt.Printf("%d. Nama Produk : %s\nQty :%d\nDibuat oleh: %s\nTerakhir Update:%s\n\n", i+1, val.Nama_produk, val.Qty, val.Nama_pembuat, val.Nama_Pengganti.String)
+		}
+	}
 }
 
 func CalculatePage(length int) int {
@@ -51,10 +60,10 @@ func ConvertStringToInt(stringg string) int {
 func IsNotInt(stringg string) bool {
 	regex, _ := regexp.Compile(`([a-zA-Z&*=\(\)\[\-\_\/\]\>\.\,\<\{\}~^%$#@!\\]+)`)
 	return regex.MatchString(stringg)
-}
-
+}																										
+																										
 func IsEmpty(stringg string) bool {
-	if len(stringg) < 1 {
+	if stringg == "" {
 		return true
 	}
 	return false
