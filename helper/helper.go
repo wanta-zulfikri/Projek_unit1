@@ -71,3 +71,7 @@ func IsEmpty(stringg string) bool {
 	}
 	return false
 }
+func IfAlreadyTaken(data string, input string) bool {
+	regex, _ := regexp.Compile(fmt.Sprintf(`([%s]+)`, data))
+	return regex.MatchString(input)
+}
