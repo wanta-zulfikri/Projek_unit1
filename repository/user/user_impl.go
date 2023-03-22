@@ -118,3 +118,16 @@ func (u *User) Delete(userid int) error {
 	}
 	return errors.New("User tidak berhasil dihapus")
 }
+
+func (u *User) InsertLog(oldusername, newusername string) error {
+	res, err := u.db.Exec("INSERT INTO log_account(username_lama,username_baru,tanggal_perubahan) VALUES(?,?,?)", oldusername, newusername, time.Now())
+	if err != nil {
+		return err
+	}
+	resaff, _ := res.RowsAffected()
+	if resaff > 0 {
+		return nil
+	}
+	return errors.New("Log tidak berhasil ditambahkan")
+
+}
