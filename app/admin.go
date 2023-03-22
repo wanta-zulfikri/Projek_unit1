@@ -24,7 +24,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("7.Update Produk")
 	fmt.Println("8.Hapus Produk")
 	fmt.Println("9.Edit Pelanggan")
-	fmt.Println("4.Tambah Produk")
+	fmt.Println("10.Buat Nota")
 	fmt.Println("5.Tambah Produk")
 	fmt.Println("6.Hapus Pegawai")
 	fmt.Print("Masukan Pilihan : ")
@@ -54,12 +54,12 @@ func (admin *App) HomeAdmin() {
 
 	case 8:
 		admin.HapusProduk()
-	
-    case 9:
-	    admin.UpdateCustomer()
-	}
 
-	
+	case 9:
+		admin.UpdateCustomer()
+	case 10:
+		admin.CreateTransaction()
+	}
 
 }
 

@@ -318,5 +318,4 @@ func (app *App) HapusProduk() {
 	}
 	app.HomePegawai()
 
-
 }
