@@ -17,11 +17,14 @@ func (app *App) HomePegawai() {
 	fmt.Println("2.Update Produk")
 	fmt.Println("3.Tambah Customer")
 	fmt.Println("4.Buat Nota")
+	fmt.Println("5.Update Profile")
 	fmt.Scanln(&choice)
 	switch choice {
 	case 1:
 	case 2:
 	case 3:
+	case 5:
+		app.UpdateAccount()
 	}
 }
 
@@ -66,8 +69,11 @@ func (app *App) UpdateAccount() {
 		time.Sleep(time.Second * 3)
 		app.HomePegawai()
 	}
-
-	helper.ChangeSession(&app.Session[key].Username, username)
+	if username != app.Session[key].Username {
+		newdata, _ := app.usersRepo.FindByUsername(username)
+		delete(app.Session, key)
+		app.Session[username] = newdata
+	}
 	fmt.Println("Berhasil mengupdate data,anda akan diarahakan ke halaman utama")
 	time.Sleep(time.Second * 3)
 	app.HomePegawai()
