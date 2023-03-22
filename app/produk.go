@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-
+	"strings"
 	"time"
 
 	"github.com/wanta-zulfikri/Projek_unit1/config"
@@ -143,7 +143,7 @@ func (app *App) UpdateProduk() {
 			return
 		}
 	}
-	fmt.Print("Silahkan Pilih Produk Ynag Ingin Di Update: ")
+	fmt.Print("Silahkan Pilih Produk Yang Ingin Di Update: ")
 	fmt.Scanln(&choice)
 	fmt.Print("Masukan Produk Baru (Enter Untuk Skp) : ")
 	app.Scanner.Scan()
@@ -179,11 +179,6 @@ func (app *App) UpdateProduk() {
 			app.UpdateProduk()
 			return
 		}
-		if app.Session[key].Role == "admin" {
-
-			app.HomeAdmin()
-		}
-		app.HomePegawai()
 		return
 	}
 	fmt.Println("Anda akan diarahkan ke menu utama")
@@ -202,99 +197,126 @@ func (app *App) UpdateProduk() {
 
 }
 
-// func (admin *App) HapusPegawai() {
-// 	var choice string
-// 	fmt.Print("\x1bc")
-// 	fmt.Println("==============FORM HAPUS PEGAWI================")
-// 	fmt.Println()
-// 	lenght, _ := admin.usersRepo.GetAllByRole("pegawai")
-// 	page := helper.CalculatePage(len(lenght))
-// 	datas, _ := admin.usersRepo.GetAllByRoleLimit("pegawai", admin.OffsetContent)
-// 	if len(lenght) == 0 {
-// 		fmt.Println("Data Pergawai Belum Ada")
-// 		fmt.Print("Apakah anda ingin menambahkan data pegawai? (y/t): ")
-// 		fmt.Scanln(&choice)
-// 		if choice == "y" {
-// 			admin.TambahPegawai()
-// 			return
-// 		}
-// 		admin.HomeAdmin()
-// 		return
-// 	}
-// 	helper.PrintData(datas)
-// 	if page > admin.PageContent {
-// 		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Tidak Tekan Enter : ")
-// 		fmt.Scanln(&choice)
-// 		if choice == "L" {
-// 			admin.PageContent++
-// 			admin.OffsetContent += config.LimitPage
-// 			admin.HapusPegawai()
-// 			return
-// 		}
-// 	} else if admin.PageContent != 1 || (admin.PageContent == page && page > 1) {
-// 		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
-// 		fmt.Scanln(&choice)
-// 		if choice == "K" {
-// 			admin.PageContent--
-// 			admin.OffsetContent -= config.LimitPage
-// 			admin.HapusPegawai()
-// 			return
-// 		}
-// 	}
-// 	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Dihapus jika ingin sekaligus gunakan format (ex:1,2,3): ")
-// 	fmt.Scanln(&choice)
-// 	var index int
-// 	if strings.Contains(choice, ",") {
-// 		ids := strings.Split(choice, ",")
-// 		for i, val := range ids {
-// 			toint := helper.ConvertStringToInt(val) - 1
-// 			err := admin.usersRepo.Delete(datas[toint].Id)
-// 			if err != nil {
-// 				fmt.Printf("Id %d Tidak terdaftar\n", datas[toint].Id)
-// 				fmt.Printf("Data yang Dihapus sebanyak %d", i+1)
-// 				break
-// 			}
-// 			index++
-// 		}
-// 		if index < 1 {
-// 			fmt.Println("Masukan Data Yang benar")
-// 			time.Sleep(2 * time.Second)
-// 			admin.HapusPegawai()
-// 			return
-// 		}
-// 		fmt.Println("Berhasil Mengapus Data")
-// 		fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
-// 		fmt.Scanln(&choice)
-// 		if choice == "y" {
-// 			helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 			admin.HapusPegawai()
-// 			return
-// 		}
-// 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 		fmt.Println("Anda Akan diarahkan ke menu dashboard")
-// 		time.Sleep(time.Second * 2)
-// 		admin.HomeAdmin()
-// 		return
-// 	}
-// 	err := admin.usersRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
-// 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 	if err != nil {
-// 		fmt.Println("Masukan Data Yang Benar!!!")
-// 		time.Sleep(time.Second * 2)
-// 		admin.HapusPegawai()
-// 		return
-// 	}
-// 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 	fmt.Println("Berhasil Mengahapus Data")
-// 	fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
-// 	fmt.Scanln(&choice)
-// 	if choice == "y" {
-// 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 		admin.HapusPegawai()
-// 		return
-// 	}
-// 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
-// 	fmt.Println("Anda akan diarahkan ke halaman utama")
-// 	time.Sleep(time.Second * 2)
-// 	admin.HomeAdmin()
-// }
+func (app *App) HapusProduk() {
+	var choice string
+	key := helper.GetUser(app.Session)
+	fmt.Print("\x1bc")
+	fmt.Println("\n=============Hapus Produk======================")
+	fmt.Println()
+	lenght, _ := app.ProdukRepo.GetAll()
+	page1 := helper.CalculatePage(len(lenght))
+	datas, _ := app.ProdukRepo.GetAllProduk(app.OffsetContent)
+	if len(lenght) == 0 {
+		fmt.Println("Hapus Data Anda")
+		fmt.Print("Apakah anda ingin menghapus data produk? (y/t): ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			app.HapusProduk()
+			return
+		}
+		if app.Session[key].Role == "admin" {
+
+			app.HomeAdmin()
+		}
+		app.HomePegawai()
+		return
+	}
+	helper.PrintData(datas)
+	if page1 > app.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Tidak Tekan Enter :  ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			app.PageContent++
+			app.OffsetContent += config.LimitPage
+			app.HapusProduk()
+			return
+		}
+	} else if app.PageContent != 1 || (app.PageContent == page1 && page1 > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			app.PageContent++
+			app.OffsetContent -= config.LimitPage
+			app.HapusProduk()
+			return
+		}
+	}
+	fmt.Print("Silahkan Pilih Produk Yang Ingin Di Hapus: ")
+	fmt.Scanln(&choice)
+	var index int
+	if strings.Contains(choice, ",") {
+		ids := strings.Split(choice, ",")
+		for i, val := range ids {
+			if helper.IsNotInt(val) {
+				fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
+				fmt.Scanln(&choice)
+				if choice == "y" {
+					app.HapusProduk()
+				}
+				fmt.Println("Kamu Akan diarahkan ke halaman utama")
+				time.Sleep(time.Second * 3)
+				app.HapusProduk()
+			}
+			toint := helper.ConvertStringToInt(val) - 1
+			err := app.ProdukRepo.Delete(datas[toint].Id)
+			if err != nil {
+				fmt.Printf("Id %d Tidak terdaftar\n", datas[toint].Id)
+				fmt.Printf("Data yang Dihapus sebanyak %d", i+1)
+				break
+			}
+			index++
+		}
+		if index < 1 {
+			fmt.Println("Masukan Data Yang benar")
+			time.Sleep(2 * time.Second)
+			app.HapusProduk()
+			return
+		}
+		fmt.Println("Berhasil Mengapus Data")
+		fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+			app.HapusProduk()
+			return
+		}
+		helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+		fmt.Println("Anda Akan diarahkan ke menu dashboard")
+		time.Sleep(time.Second * 2)
+		if app.Session[key].Role == "admin" {
+
+			app.HomeAdmin()
+		}
+		app.HomePegawai()
+		return
+	}
+
+	err := app.ProdukRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
+	helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+	if err != nil {
+		fmt.Println("Masukan Data Yang Benar!!!")
+		time.Sleep(time.Second * 2)
+		app.HapusProduk()
+		return
+	}
+
+	helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+	fmt.Println("Berhasil Mengahapus Data")
+	fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
+	fmt.Scanln(&choice)
+	if choice == "y" {
+		helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+		app.HapusProduk()
+		return
+	}
+	helper.ResetValue(&app.PageContent, &app.OffsetContent, 1, 0)
+	fmt.Println("Anda akan diarahkan ke halaman utama")
+	time.Sleep(time.Second * 2)
+	if app.Session[key].Role == "admin" {
+
+		app.HomeAdmin()
+	}
+	app.HomePegawai()
+
+
+}
