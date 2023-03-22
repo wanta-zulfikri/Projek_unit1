@@ -19,12 +19,10 @@ func InitProduk(db *sql.DB) ProdukInterface {
 }
 
 func (p *Produk) Tambahproduk(data *entities.Produk, userID int) error {
-	row, err := p.db.Exec("INSERT INTO Produk (nama_produk, user_id, qty) values(?, ?, ?)", data.Nama_produk, userID, data.Qty)
-	fmt.Println(err)
+	row, err := p.db.Exec("INSERT INTO Produk (nama_produk, user_id, qty,price) values(?, ?, ?, ?)", data.Nama_produk, userID, data.Qty, data.Price)
 	if err != nil {
 		return errors.New("gagal membuat produk")
 	}
-
 	rowaff, err := row.RowsAffected()
 	if err != nil {
 		fmt.Println(err)
@@ -32,18 +30,17 @@ func (p *Produk) Tambahproduk(data *entities.Produk, userID int) error {
 	}
 	if rowaff > 0 {
 		return nil
-
 	}
 	return errors.New("gagal membuat produk")
 }
 
 func (p *Produk) Getbynama(nama string) (*entities.Produk, error) {
 	res := &entities.Produk{}
-	row := p.db.QueryRow("select id,nama_produk,user_id,qty from Produk where nama_produk=? and deleted_at is null", nama)
+	row := p.db.QueryRow("select id,nama_produk,user_id,qty,price from Produk where nama_produk=? and deleted_at is null", nama)
 	if row.Err() != nil {
 		return nil, errors.New("nama produk tidak terdaftar")
 	}
-	err := row.Scan(&res.Id, &res.Nama_produk, &res.User_id)
+	err := row.Scan(&res.Id, &res.Nama_produk, &res.User_id,&res.Price)
 	if err != nil {
 		return nil, errors.New("nama produk tidak terdaftar")
 	}
@@ -51,7 +48,7 @@ func (p *Produk) Getbynama(nama string) (*entities.Produk, error) {
 }
 
 func (p *Produk) UpdateProduk(data *entities.Produk, user_name string) error {
-	res, err := p.db.Exec("UPDATE Produk SET qty=?,nama_produk=?,updated_by=? WHERE id=?", data.Qty, data.Nama_produk, user_name, data.Id)
+	res, err := p.db.Exec("UPDATE Produk SET qty=?,price=?,nama_produk=?,updated_by=? WHERE id=?", data.Qty,data.Price, data.Nama_produk, user_name, data.Id)
 	if err != nil {
 		return err
 	}
@@ -65,13 +62,13 @@ func (p *Produk) UpdateProduk(data *entities.Produk, user_name string) error {
 
 func (p *Produk) GetAll() ([]*entities.Produk, error) {
 	res := []*entities.Produk{}
-	rows, err := p.db.Query("select id, nama_produk, user_id, qty from Produk where deleted_at is null")
+	rows, err := p.db.Query("select id, nama_produk, user_id, qty, price from Produk where deleted_at is null")
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		row := &entities.Produk{}
-		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty)
+		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty, &row.Price)
 		if err != nil {
 			return nil, err
 		}
@@ -83,14 +80,16 @@ func (p *Produk) GetAll() ([]*entities.Produk, error) {
 
 func (P *Produk) GetAllProduk(offset int) ([]*entities.Produk, error) {
 	res := []*entities.Produk{}
-	rows, err := P.db.Query(fmt.Sprintf("SELECT p.id,p.nama_produk,p.user_id,p.qty,u.user_name,p.updated_by from Produk p JOIN user u ON u.id=p.user_id where p.qty > 0 AND p.deleted_at is null limit %d offset %d", config.LimitPage, offset))
+	rows, err := P.db.Query(fmt.Sprintf("SELECT p.id,p.nama_produk,p.user_id,p.qty,p.price,u.user_name,p.updated_by from Produk p JOIN user u ON u.id=p.user_id where p.qty > 0 AND p.deleted_at is null limit %d offset %d", config.LimitPage, offset))
+	fmt.Println(err, "ini Data")
 	if err != nil {
 		return nil, err
 	}
 
 	for rows.Next() {
 		row := &entities.Produk{}
-		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty, &row.Nama_pembuat, &row.Nama_Pengganti)
+		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty,&row.Price, &row.Nama_pembuat, &row.Nama_Pengganti)
+		fmt.Println(err, "Ini Data")
 		if err != nil {
 			return nil, err
 		}
@@ -101,14 +100,14 @@ func (P *Produk) GetAllProduk(offset int) ([]*entities.Produk, error) {
 
 func (p *Produk) GetAllow() ([]*entities.Produk, error) {
 	res := []*entities.Produk{}
-	rows, err := p.db.Query("SELECT id,nama_produk,user_id,qty from Produk where deleted_at is null")
+	rows, err := p.db.Query("SELECT id,nama_produk,user_id,qty,price from Produk where deleted_at is null")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		row := &entities.Produk{}
-		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty)
+		err := rows.Scan(&row.Id, &row.Nama_produk, &row.User_id, &row.Qty,&row.Price)
 		if err != nil {
 			return nil, err
 		}
@@ -126,6 +125,37 @@ func (p *Produk) Delete(produkid int) error {
 		return nil
 	}
 	return errors.New("produk tidak berhasil dihapus")
+} 
+
+func (p *Produk)Harga(data *entities.Produk, harga int) error {
+	row, err := p.db.Exec("INSERT INTO Produk (nama_produk, qty, price) values(?, ?, ?)", data.Nama_produk,data.Qty,data.Price)
+	if err != nil {
+		return errors.New("gagal membuat produk")
+	}
+
+	rowaff, err := row.RowsAffected()
+	if err != nil {
+		return errors.New("gagal membuat produk")
+	}
+	if rowaff > 0 {
+		return nil
+
+	}
+	return errors.New("gagal membuat produk")	
+	
+
+}
+func (p *Produk) HargaProduk(harga int) (*entities.Produk, error) {
+	res := &entities.Produk{}
+	row := p.db.QueryRow("select id,nama_produk,user_id,qty,price from Produk where nama_produk=? and deleted_at is null", harga)
+	if row.Err() != nil {
+		return nil, errors.New("nama produk tidak terdaftar")
+	}
+	err := row.Scan(&res.Id, &res.Nama_produk, &res.User_id,&res.Price)
+	if err != nil {
+		return nil, errors.New("nama produk tidak terdaftar")
+	}
+	return res, nil
 }
 
 func (p *Produk) UpdateStok(newstok int, produkid int) error {

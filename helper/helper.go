@@ -40,7 +40,7 @@ func PrintData(datas interface{}) {
 			if !val.Nama_Pengganti.Valid {
 				val.Nama_Pengganti.String = "Belum Ada"
 			}
-			fmt.Printf("%d. Nama Produk : %s\nQty :%d\nDibuat oleh: %s\nTerakhir Update:%s\n\n", i+1, val.Nama_produk, val.Qty, val.Nama_pembuat, val.Nama_Pengganti.String)
+			fmt.Printf("%d. Nama Produk : %s\nQty : %d\nHarga: %d\nDibuat oleh: %s\nTerakhir Update:%s\n\n", i+1, val.Nama_produk, val.Qty, val.Price, val.Nama_pembuat, val.Nama_Pengganti.String)
 		}
 	}
 }

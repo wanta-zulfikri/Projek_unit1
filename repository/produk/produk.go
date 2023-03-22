@@ -8,6 +8,9 @@ type ProdukInterface interface {
 	GetAllProduk(offset int) ([]*entities.Produk, error)
 	GetAll() ([]*entities.Produk, error)
 	UpdateProduk(data *entities.Produk, user_name string) error
-	Delete(userid int) error
 	UpdateStok(newstok int, produkid int) error
+	Delete(userid int) error 
+	Harga(data *entities.Produk, harga int) error
+	HargaProduk(harga int) (*entities.Produk, error)
+	
 }
