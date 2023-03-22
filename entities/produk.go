@@ -5,11 +5,12 @@ import (
 )
 
 type Produk struct {
-	Id             int
-	Nama_produk    string
-	User_id        string
-	Qty            int
-	Nama_pembuat   string
-	Nama_Pengganti sql.NullString
-	Price          int
+	Id int
+	Nama_produk string
+	User_id string
+	Qty int 
+	Price int
+	Nama_pembuat string 
+	Nama_Pengganti sql.NullString 
+
 }
