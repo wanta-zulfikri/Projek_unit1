@@ -71,3 +71,7 @@ func IsEmpty(stringg string) bool {
 	}
 	return false
 }
+
+func ChangeSession(oldusername *string, newusername string) {
+	*oldusername = newusername
+}
