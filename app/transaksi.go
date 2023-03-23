@@ -365,7 +365,7 @@ func (trx *App) ListTransaction() {
 		lenght, _ = trx.TrxRepo.GetAll()
 		datas, _ = trx.TrxRepo.GetWithLimit(trx.OffsetContent)
 	} else {
-		lenght, _ = trx.TrxRepo.GetAll()
+		lenght, _ = trx.TrxRepo.GetAllByUid(trx.Session[key].Id)
 		datas, _ = trx.TrxRepo.GetWithLimitByUid(trx.Session[key].Id, trx.OffsetContent)
 	}
 	page := helper.CalculatePage(len(lenght))
