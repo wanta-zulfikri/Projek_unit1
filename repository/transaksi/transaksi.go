@@ -10,4 +10,5 @@ type TransaksiInterface interface {
 	GetListItemByid(trxid int) ([]*entities.TransaksiItem, error)
 	GetAllByUid(userid int) ([]*entities.Transaksi, error)
 	GetWithLimitByUid(userid, offset int) ([]*entities.Transaksi, error)
+	Delete(trxid int) error
 }

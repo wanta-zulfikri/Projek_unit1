@@ -408,3 +408,122 @@ func (trx *App) ListTransaction() {
 		trx.HomePegawai()
 	}
 }
+
+func (trx *App) DeleteTransaction() {
+	var choice string
+	fmt.Print("\x1bc")
+	fmt.Println("========Form Delete Transaksi=========")
+	lenght, _ := trx.TrxRepo.GetAll()
+	datas, _ := trx.TrxRepo.GetWithLimit(trx.OffsetContent)
+	page := helper.CalculatePage(len(lenght))
+	if len(lenght) == 0 {
+		fmt.Println("Data Transaksi Belum Ada")
+		time.Sleep(time.Second * 3)
+		trx.HomeAdmin()
+
+	}
+	helper.PrintData(datas, trx.TrxRepo)
+	if page > trx.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			trx.PageContent++
+			trx.OffsetContent += config.LimitPage
+			trx.DeleteTransaction()
+			return
+		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		trx.HomeAdmin()
+
+	} else if trx.PageContent != 1 || (trx.PageContent == page && page > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			trx.PageContent--
+			trx.OffsetContent -= config.LimitPage
+			trx.DeleteTransaction()
+			return
+		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		trx.HomeAdmin()
+	}
+	fmt.Print("Silahkan Pilih transaksi Yang Ingin Dihapus,jika ingin sekaligus gunakan format (ex:1,2,3): ")
+	fmt.Scanln(&choice)
+	var index int
+	if strings.Contains(choice, ",") {
+		ids := strings.Split(choice, ",")
+		for i, val := range ids {
+			if helper.IsNotInt(val) {
+				fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
+				fmt.Scanln(&choice)
+				if choice == "y" {
+					helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+					trx.DeleteTransaction()
+				}
+				helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+				fmt.Println("Kamu Akan diarahkan ke halaman utama")
+				time.Sleep(time.Second * 3)
+				trx.HomeAdmin()
+			}
+			toint := helper.ConvertStringToInt(val) - 1
+			err := trx.TrxRepo.Delete(datas[toint].Id)
+			if err != nil {
+				fmt.Printf("Id %d Tidak terdaftar\n", datas[toint].Id)
+				fmt.Printf("Data yang Dihapus sebanyak %d", i+1)
+				break
+			}
+			index++
+		}
+		if index < 1 {
+			helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+			fmt.Println("Masukan Data Yang benar")
+			time.Sleep(2 * time.Second)
+			trx.DeleteTransaction()
+			return
+		}
+		fmt.Println("Berhasil Mengapus Data")
+		fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+			trx.DeleteTransaction()
+		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		fmt.Println("Anda Akan diarahkan ke menu dashboard")
+		time.Sleep(time.Second * 2)
+		trx.HomeAdmin()
+	}
+	if helper.IsNotInt(choice) {
+		fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
+		fmt.Scanln(&choice)
+		if choice == "y" {
+			helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+			trx.DeleteTransaction()
+		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		fmt.Println("Kamu Akan diarahkan ke halaman utama")
+		time.Sleep(time.Second * 3)
+		trx.HomeAdmin()
+	}
+	err := trx.TrxRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
+	if err != nil {
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		fmt.Println("Masukan Data Yang Benar!!!")
+		time.Sleep(time.Second * 2)
+		trx.DeleteTransaction()
+		return
+	}
+	fmt.Println("Berhasil Mengahapus Data")
+	fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
+	fmt.Scanln(&choice)
+	if choice == "y" {
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+		trx.DeleteCustomer()
+		return
+	}
+	helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+	fmt.Println("Anda akan diarahkan ke halaman utama")
+	time.Sleep(time.Second * 2)
+	trx.HomeAdmin()
+
+}

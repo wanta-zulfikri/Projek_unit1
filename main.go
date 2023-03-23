@@ -18,7 +18,7 @@ func main() {
 	migration.Migration()
 	InitUser := user.InitUser(DB)
 	InitProduk := produk.InitProduk(DB)
-	InitCus := customer.InitProduk(DB)
+	InitCus := customer.InitCustomer(DB)
 	InitTrx := transaksi.InitTransaksi(DB)
 	var choice int
 	defer DB.Close()

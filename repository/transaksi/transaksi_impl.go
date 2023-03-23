@@ -137,3 +137,15 @@ func (trx *Transaksi) GetListItemByid(trxid int) ([]*entities.TransaksiItem, err
 	return res, nil
 
 }
+
+func (trx *Transaksi) Delete(trxid int) error {
+	row, err := trx.db.Exec("UPDATE transaksi set deleted_at=? where id=?", time.Now(), trxid)
+	if err != nil {
+		return errors.New("Transaksi Tidak Berhasil Dihapus")
+	}
+	rowaff, _ := row.RowsAffected()
+	if rowaff > 0 {
+		return nil
+	}
+	return errors.New("Transaksi Tidak Berhasil Dihapus")
+}

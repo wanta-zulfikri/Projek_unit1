@@ -121,8 +121,10 @@ func (cus *App) DeleteCustomer() {
 				fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
 				fmt.Scanln(&choice)
 				if choice == "y" {
+					helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 					cus.DeleteCustomer()
 				}
+				helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 				fmt.Println("Kamu Akan diarahkan ke halaman utama")
 				time.Sleep(time.Second * 3)
 				if cus.Session[key].Role == "admin" {
@@ -142,6 +144,7 @@ func (cus *App) DeleteCustomer() {
 			index++
 		}
 		if index < 1 {
+			helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 			fmt.Println("Masukan Data Yang benar")
 			time.Sleep(2 * time.Second)
 			cus.DeleteCustomer()
@@ -168,8 +171,10 @@ func (cus *App) DeleteCustomer() {
 		fmt.Print("Wajib Angka!!!,Ingin mencoba lagi? y/t: ")
 		fmt.Scanln(&choice)
 		if choice == "y" {
+			helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 			cus.DeleteCustomer()
 		}
+		helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 		fmt.Println("Kamu Akan diarahkan ke halaman utama")
 		time.Sleep(time.Second * 3)
 		if cus.Session[key].Role == "admin" {
@@ -180,14 +185,13 @@ func (cus *App) DeleteCustomer() {
 		return
 	}
 	err := cus.CusRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
-	helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 	if err != nil {
+		helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 		fmt.Println("Masukan Data Yang Benar!!!")
 		time.Sleep(time.Second * 2)
 		cus.DeleteCustomer()
 		return
 	}
-	helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 	fmt.Println("Berhasil Mengahapus Data")
 	fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
 	fmt.Scanln(&choice)
