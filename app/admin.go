@@ -25,8 +25,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("8.Hapus Produk")
 	fmt.Println("9.Edit Pelanggan")
 	fmt.Println("10.Buat Nota")
-	fmt.Println("5.Tambah Produk")
-	fmt.Println("6.Hapus Pegawai")
+	fmt.Println("11.Lihat Transaksi")
 	fmt.Print("Masukan Pilihan : ")
 	fmt.Scanln(&choice)
 	switch choice {
@@ -59,6 +58,8 @@ func (admin *App) HomeAdmin() {
 		admin.UpdateCustomer()
 	case 10:
 		admin.CreateTransaction()
+	case 11:
+		admin.ListTransaction()
 	}
 
 }

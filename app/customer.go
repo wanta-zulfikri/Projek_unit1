@@ -179,7 +179,7 @@ func (cus *App) DeleteCustomer() {
 		cus.HomePegawai()
 		return
 	}
-	err := cus.usersRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
+	err := cus.CusRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
 	helper.ResetValue(&cus.PageContent, &cus.OffsetContent, 1, 0)
 	if err != nil {
 		fmt.Println("Masukan Data Yang Benar!!!")

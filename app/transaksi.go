@@ -166,6 +166,9 @@ func (trx *App) CreateTransaction() {
 						if !helper.IsNotInt(choice) && !helper.IfAlreadyTaken(databerhasil, choice) {
 							val = choice
 							repeat = false
+						} else {
+							fmt.Print(fmt.Sprintf("\n Data Produk %s Sudah dibuat\n", datas[helper.ConvertStringToInt(choice)-1].Nama_produk))
+							time.Sleep(3 * time.Second)
 						}
 					}
 				} else {
@@ -349,4 +352,57 @@ func (trx *App) CreateTransaction() {
 		trx.HomeAdmin()
 	}
 	trx.HomePegawai()
+}
+
+func (trx *App) ListTransaction() {
+	var choice string
+	fmt.Print("\x1bc")
+	fmt.Println("========List Transaksi=========")
+	key := helper.GetUser(trx.Session)
+	var lenght []*entities.Transaksi
+	var datas []*entities.Transaksi
+	if trx.Session[key].Role == "admin" {
+		lenght, _ = trx.TrxRepo.GetAll()
+		datas, _ = trx.TrxRepo.GetWithLimit(trx.OffsetContent)
+	} else {
+		lenght, _ = trx.TrxRepo.GetAll()
+		datas, _ = trx.TrxRepo.GetWithLimitByUid(trx.Session[key].Id, trx.OffsetContent)
+	}
+	page := helper.CalculatePage(len(lenght))
+	if len(lenght) == 0 {
+		fmt.Println("Data Transaksi Belum Ada")
+		time.Sleep(time.Second * 3)
+		if trx.Session[key].Role == "admin" {
+			trx.HomeAdmin()
+		}
+		trx.HomePegawai()
+	}
+	helper.PrintData(datas, trx.TrxRepo)
+	if page > trx.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			trx.PageContent++
+			trx.OffsetContent += config.LimitPage
+			trx.ListTransaction()
+			return
+		}
+		if trx.Session[key].Role == "admin" {
+			trx.HomeAdmin()
+		}
+		trx.HomePegawai()
+	} else if trx.PageContent != 1 || (trx.PageContent == page && page > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			trx.PageContent--
+			trx.OffsetContent -= config.LimitPage
+			trx.ListTransaction()
+			return
+		}
+		if trx.Session[key].Role == "admin" {
+			trx.HomeAdmin()
+		}
+		trx.HomePegawai()
+	}
 }
