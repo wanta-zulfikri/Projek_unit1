@@ -13,6 +13,7 @@ import (
 )
 
 func main() {
+
 	DB := db.InitDb()
 	migration.Migration()
 	InitUser := user.InitUser(DB)
