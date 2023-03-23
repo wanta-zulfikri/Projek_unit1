@@ -44,7 +44,12 @@ func PrintData(datas ...interface{}) {
 			fmt.Printf("%d. Nama Produk : %s\nQty : %d\nHarga: %d\nDibuat oleh: %s\nTerakhir Update:%s\n\n", i+1, val.Nama_produk, val.Qty, val.Price, val.Nama_pembuat, val.Nama_Pengganti.String)
 		}
 	}
-
+	if datas, ok := datas[0].([]*entities.Log); ok {
+		fmt.Printf("%-4s%-20s%-20s%-20s\n", "No", "Username Lama", "Username Baru", "Tanggal Perubahan")
+		for i, val := range datas {
+			fmt.Printf("%-4d%-20s%-20s%-20s\n", i+1, val.OldUsername, val.NewUsername, val.Date.String())
+		}
+	}
 	if datas1, ok := datas[0].([]*entities.Transaksi); ok {
 		if interfacet, ok := datas[1].(transaksi.TransaksiInterface); ok {
 			fmt.Println("Berikut List Transaksi")

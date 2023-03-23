@@ -11,4 +11,6 @@ type UserInterface interface {
 	Create(data *entities.User) error
 	Update(data *entities.User, userid int) error
 	Delete(userid int) error
+	GetLog() ([]*entities.Log, error)
+	GetLogWithLimit(offset int) ([]*entities.Log, error)
 }
