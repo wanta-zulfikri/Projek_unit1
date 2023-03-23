@@ -14,7 +14,7 @@ type Customer struct {
 	db *sql.DB
 }
 
-func InitProduk(db *sql.DB) CustomerInterface {
+func InitCustomer(db *sql.DB) CustomerInterface {
 	return &Customer{db}
 }
 
