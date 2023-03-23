@@ -432,9 +432,6 @@ func (trx *App) DeleteTransaction() {
 			trx.DeleteTransaction()
 			return
 		}
-		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
-		trx.HomeAdmin()
-
 	} else if trx.PageContent != 1 || (trx.PageContent == page && page > 1) {
 		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Ingin Kembali Tekan Enter: ")
 		fmt.Scanln(&choice)
@@ -442,10 +439,7 @@ func (trx *App) DeleteTransaction() {
 			trx.PageContent--
 			trx.OffsetContent -= config.LimitPage
 			trx.DeleteTransaction()
-			return
 		}
-		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
-		trx.HomeAdmin()
 	}
 	fmt.Print("Silahkan Pilih transaksi Yang Ingin Dihapus,jika ingin sekaligus gunakan format (ex:1,2,3): ")
 	fmt.Scanln(&choice)
