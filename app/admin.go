@@ -26,6 +26,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("9.Edit Pelanggan")
 	fmt.Println("10.Buat Nota")
 	fmt.Println("11.Lihat Transaksi")
+	fmt.Println("12.Lihat Log Pegawai")
 	fmt.Print("Masukan Pilihan : ")
 	fmt.Scanln(&choice)
 	switch choice {
