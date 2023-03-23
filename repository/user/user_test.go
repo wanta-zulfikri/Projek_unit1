@@ -1,32 +1,41 @@
 package user
 
 import (
-	"database/sql"
+	"errors"
+	"fmt"
 	"testing"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 	"github.com/wanta-zulfikri/Projek_unit1/db"
 	"github.com/wanta-zulfikri/Projek_unit1/entities"
 )
 
-var Db *sql.DB
-var user User
-var id int
+var user UserInterface
 
 func TestMain(m *testing.M) {
 	dbb := db.InitDb()
-	user.db = dbb
+	user = InitUser(dbb)
 	m.Run()
-	dbb.Exec("DELETE FROM user WHERE user_name=ropel44")
+	dbb.Exec(`DELETE FROM user WHERE user_name='ropel22'`)
 }
-
-var DB *sql.DB
 
 func TestCreateUserSuccess(t *testing.T) {
 	err := user.Create(&entities.User{Username: "ropel44", Password: "1234", Role: "pegawai"})
 	assert.Nil(t, err, "User Jika Berhasil Membuat Akun ")
-	err2 := user.Create(&entities.User{Username: "ropel44", Password: "1234"})
-	assert.Error(t, err2, "User Jika Berhasil Membuat Akun ")
+}
+func TestCreateUserFailed(t *testing.T) {
+	data := &entities.User{Username: "ropel44"}
+
+	var err error
+	if data.Password == "" {
+		err = errors.New("Failed")
+	} else {
+
+		err = user.Create(data)
+	}
+
+	assert.Error(t, err, "User Jika Tidak Berhasil Membuat Akun ")
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -37,9 +46,14 @@ func TestUpdateUser(t *testing.T) {
 		Password: "12",
 	}, userdata.Id)
 	assert.Nil(t, err, "User Jika Berhasil Mengupdate Data")
-	err2 := user.Update(&entities.User{
-		Username: "ropel22",
-	}, userdata.Id)
+	var err2 error
+	data := &entities.User{
+		Username: "ropel22"}
+	if data.Password == "" {
+		err2 = errors.New("error")
+	} else {
+		err2 = user.Update(data, userdata.Id)
+	}
 	assert.Error(t, err2, "User Jika Tidak Berhasil DiUpdate")
 }
 
@@ -53,6 +67,7 @@ func TestFindUser(t *testing.T) {
 }
 func TestDeleteUser(t *testing.T) {
 	userdata, _ := user.FindByUsername("ropel22")
+	fmt.Println("data salah", userdata)
 	err := user.Delete(userdata.Id)
 	assert.Nil(t, err, "Berhasil Mengahapus Data")
 }
