@@ -387,6 +387,7 @@ func (trx *App) ListTransaction() {
 			trx.ListTransaction()
 			return
 		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 		if trx.Session[key].Role == "admin" {
 			trx.HomeAdmin()
 		}
@@ -400,6 +401,7 @@ func (trx *App) ListTransaction() {
 			trx.ListTransaction()
 			return
 		}
+		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 		if trx.Session[key].Role == "admin" {
 			trx.HomeAdmin()
 		}

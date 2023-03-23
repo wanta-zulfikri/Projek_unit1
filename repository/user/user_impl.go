@@ -131,3 +131,39 @@ func (u *User) InsertLog(oldusername, newusername string) error {
 	return errors.New("Log tidak berhasil ditambahkan")
 
 }
+
+func (u *User) GetLog() ([]*entities.Log, error) {
+	res := []*entities.Log{}
+	rows, err := u.db.Query("SELECT username_lama,username_baru,tanggal_perubahan FROM log_account")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		row := &entities.Log{}
+		err := rows.Scan(&row.OldUsername, &row.NewUsername, &row.Date)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, row)
+	}
+	return res, nil
+
+}
+
+func (u *User) GetLogWithLimit(offset int) ([]*entities.Log, error) {
+
+	res := []*entities.Log{}
+	rows, err := u.db.Query(fmt.Sprintf("SELECT username_lama,username_baru,tanggal_perubahan FROM log_account LIMIT %d OFFSET %d", config.LimitPage, offset))
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		row := &entities.Log{}
+		err := rows.Scan(&row.OldUsername, &row.NewUsername, &row.Date)
+		if err != nil {
+			return nil, err
+		}
+		res = append(res, row)
+	}
+	return res, nil
+}

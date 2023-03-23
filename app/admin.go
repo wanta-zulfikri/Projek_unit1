@@ -60,6 +60,8 @@ func (admin *App) HomeAdmin() {
 		admin.CreateTransaction()
 	case 11:
 		admin.ListTransaction()
+	case 12:
+		admin.LogAccountPegawai()
 	}
 
 }
@@ -202,6 +204,54 @@ func (admin *App) HapusPegawai() {
 	admin.HomeAdmin()
 }
 
+func (admin *App) LogAccountPegawai() {
+	fmt.Print("\x1bc")
+	var choice string
+	key := helper.GetUser(admin.Session)
+	fmt.Println("=====================Log Akun Pegawai=====================")
+	length, _ := admin.usersRepo.GetLog()
+	page := helper.CalculatePage(len(length))
+	if len(length) == 0 {
+		fmt.Println("Belum ada data log pegawai")
+		time.Sleep(time.Second * 3)
+		if admin.Session[key].Role == "admin" {
+			admin.HomeAdmin()
+		}
+		admin.HomePegawai()
+	}
+	logs, _ := admin.usersRepo.GetLogWithLimit(admin.OffsetContent)
+	helper.PrintData(logs)
+	if page > admin.PageContent {
+		fmt.Print("Tekan L Untuk Page Selanjutnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "L" {
+			admin.PageContent++
+			admin.OffsetContent += config.LimitPage
+			admin.LogAccountPegawai()
+			return
+		}
+		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
+		if admin.Session[key].Role == "admin" {
+			admin.HomeAdmin()
+		}
+		admin.HomePegawai()
+	} else if admin.PageContent != 1 || (admin.PageContent == page && page > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Ingin Kembali Tekan Enter: ")
+		fmt.Scanln(&choice)
+		if choice == "K" {
+			admin.PageContent--
+			admin.OffsetContent -= config.LimitPage
+			admin.LogAccountPegawai()
+			return
+		}
+		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
+		if admin.Session[key].Role == "admin" {
+			admin.HomeAdmin()
+		}
+		admin.HomePegawai()
+	}
+
+}
 func (admin *App) UpdatePegawai() {
 	var choice, username, password string
 	fmt.Print("\x1bc")
