@@ -11,6 +11,7 @@ import (
 )
 
 func (app *App) InitProduk() {
+	fmt.Print("\x1bc")
 	key := helper.GetUser(app.Session)
 	fmt.Printf("Selamat datang ,%s", app.Session[key].Username)
 	var choice int
@@ -28,10 +29,11 @@ func (app *App) InitProduk() {
 }
 func (app *App) TambahProduk() {
 	var Produk string
-	var Qty int 
+	var Qty int
 	var Harga int
 	key := helper.GetUser(app.Session)
 	var choice string
+	fmt.Print("\x1bc")
 	fmt.Println("\n=============Form Produk======================")
 	fmt.Print("masukkan nama produk:  ")
 	app.Scanner.Scan()
@@ -104,7 +106,7 @@ func (app *App) TambahProduk() {
 func (app *App) UpdateProduk() {
 	var choice, namaproduk string
 	key := helper.GetUser(app.Session)
-	var qty int 
+	var qty int
 	var Harga int
 	fmt.Print("\x1bc")
 	fmt.Println("\n=============Update Produk======================")
@@ -121,7 +123,7 @@ func (app *App) UpdateProduk() {
 			return
 		}
 		if app.Session[key].Role == "admin" {
-			
+
 			app.HomeAdmin()
 		}
 		app.HomePegawai()
@@ -137,23 +139,23 @@ func (app *App) UpdateProduk() {
 			app.UpdateProduk()
 			return
 		}
-		} else if app.PageContent != 1 || (app.PageContent == page1 && page1 > 1) {
-			fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
-			fmt.Scanln(&choice)
-			if choice == "K" {
-				app.PageContent++
-				app.OffsetContent -= config.LimitPage
-				app.UpdateProduk()
-				return
-			}
-		}
-		fmt.Print("Silahkan Pilih Produk Yang Ingin Di Update: ")
+	} else if app.PageContent != 1 || (app.PageContent == page1 && page1 > 1) {
+		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
 		fmt.Scanln(&choice)
-		fmt.Print("Masukan Produk Baru (Enter Untuk Skp) : ")
-		app.Scanner.Scan()
-		namaproduk = app.Scanner.Text()
-		fmt.Print("Masukan Harga Baru:  ")
-		fmt.Scanln(&Harga)
+		if choice == "K" {
+			app.PageContent++
+			app.OffsetContent -= config.LimitPage
+			app.UpdateProduk()
+			return
+		}
+	}
+	fmt.Print("Silahkan Pilih Produk Yang Ingin Di Update: ")
+	fmt.Scanln(&choice)
+	fmt.Print("Masukan Produk Baru (Enter Untuk Skp) : ")
+	app.Scanner.Scan()
+	namaproduk = app.Scanner.Text()
+	fmt.Print("Masukan Harga Baru:  ")
+	fmt.Scanln(&Harga)
 	if namaproduk == "" {
 		namaproduk = datas[helper.ConvertStringToInt(choice)-1].Nama_produk
 	} else {
@@ -176,7 +178,7 @@ func (app *App) UpdateProduk() {
 	if qty == 0 {
 		qty = datas[helper.ConvertStringToInt(choice)-1].Qty
 	}
-	err := app.ProdukRepo.UpdateProduk(&entities.Produk{Nama_produk: namaproduk, Qty: qty,Price: Harga, Id: datas[helper.ConvertStringToInt(choice)-1].Id}, app.Session[key].Username)
+	err := app.ProdukRepo.UpdateProduk(&entities.Produk{Nama_produk: namaproduk, Qty: qty, Price: Harga, Id: datas[helper.ConvertStringToInt(choice)-1].Id}, app.Session[key].Username)
 
 	if err != nil {
 		fmt.Print("Gagal mengupdate produk, apakah ingin mencoba lagi? (y/t) ")
