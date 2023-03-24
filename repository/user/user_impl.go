@@ -30,6 +30,7 @@ func (u *User) FindByUsername(username string) (*entities.User, error) {
 	}
 	return res, nil
 }
+
 func (u *User) GetAllByRole(role string) ([]*entities.User, error) {
 	res := []*entities.User{}
 	rows, err := u.db.Query("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL", role)
