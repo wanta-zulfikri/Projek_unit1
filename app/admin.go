@@ -28,6 +28,7 @@ func (admin *App) HomeAdmin() {
 	fmt.Println("11.Lihat Transaksi")
 	fmt.Println("12.Lihat Log Pegawai")
 	fmt.Println("13.Delete Transaksi")
+	fmt.Println("14.Logout")
 	fmt.Print("Masukan Pilihan : ")
 	fmt.Scanln(&choice)
 	switch choice {
@@ -66,6 +67,10 @@ func (admin *App) HomeAdmin() {
 		admin.LogAccountPegawai()
 	case 13:
 		admin.DeleteTransaction()
+	case 14:
+		admin.Logout()
+	default:
+		admin.HomeAdmin()
 	}
 
 }

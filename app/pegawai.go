@@ -20,6 +20,7 @@ func (app *App) HomePegawai() {
 	fmt.Println("4.Buat Nota")
 	fmt.Println("5.Lihat Transaksi")
 	fmt.Println("6.Update Profile")
+	fmt.Println("7.Logout")
 	fmt.Scanln(&choice)
 	switch choice {
 	case 1:
@@ -34,6 +35,10 @@ func (app *App) HomePegawai() {
 		app.ListTransaction()
 	case 6:
 		app.UpdateAccount()
+	case 7:
+		app.Logout()
+	default:
+		app.HomePegawai()
 
 	}
 }
