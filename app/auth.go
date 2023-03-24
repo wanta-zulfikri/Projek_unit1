@@ -2,10 +2,11 @@ package app
 
 import (
 	"fmt"
+
+	"github.com/wanta-zulfikri/Projek_unit1/helper"
 )
 
 func (app *App) Login() {
-
 	fmt.Print("\x1bc")
 	var username, password, Repeatlogin string
 	fmt.Println("\n====================================================Login Form================================================================")
@@ -46,4 +47,10 @@ func (app *App) Login() {
 	}
 	app.HomePegawai()
 	return
+}
+
+func (app *App) Logout() {
+	key := helper.GetUser(app.Session)
+	delete(app.Session, key)
+	app.Home()
 }

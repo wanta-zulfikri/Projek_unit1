@@ -24,7 +24,7 @@ func Migration() {
 		price INT not null,
 		deleted_at varchar(50) default null,
 		updated_by varchar (50) default null,
-		FOREIGN KEY (user_id) REFERENCES user(id)
+		CONSTRAINT fk_produk FOREIGN KEY (user_id) REFERENCES user(id)
 		);`)
 	_, err = db.Exec(`create table IF NOT EXISTS customer (
 				id int not null auto_increment primary key,
@@ -40,8 +40,8 @@ func Migration() {
 		tgl_transaksi timestamp not null,
 		customer_id int  not null,
 		deleted_at timestamp default null,  
-		foreign key (user_id) references user(id),
-		foreign key (customer_id) references customer(id)
+		CONSTRAINT fk_trx1 foreign key (user_id) references user(id),
+		CONSTRAINT fk_trx2 foreign key (customer_id) references customer(id)
 		);`)
 	helper.PanicIfError(err)
 
@@ -51,8 +51,8 @@ func Migration() {
 		price int not null,
 		transaksi_id int not null, 
 		produk_id int not null,
-		foreign key (transaksi_id) references transaksi(id),
-		foreign key (produk_id) references produk(id)
+		CONSTRAINT fk_trxitem1 foreign key (transaksi_id) references transaksi(id),
+		CONSTRAINT fk_trxitem2 foreign key (produk_id) references produk(id)
 		
 	);`)
 	helper.PanicIfError(err)
@@ -62,6 +62,7 @@ func Migration() {
 		tanggal_perubahan timestamp not null
 	);`)
 	helper.PanicIfError(err)
+	// _, err = db.Exec(`INSERT INTO USER(user_name,password,role) VALUES('admin','admin','admin')`)
+	helper.PanicIfError(err)
 	defer db.Close()
-
 }
