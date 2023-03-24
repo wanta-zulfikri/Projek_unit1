@@ -54,7 +54,7 @@ func PrintData(datas ...interface{}) {
 		if interfacet, ok := datas[1].(transaksi.TransaksiInterface); ok {
 			fmt.Println("Berikut List Transaksi")
 			for i, val := range datas1 {
-				fmt.Printf("%d. Id Transaksi: %d\nTanggal Transaksi: %s\nNama Pelanggan:%s\nDetail Barang:\n", i+1, val.Id, val.Tanggal.String(), val.CustomerName)
+				fmt.Printf("%d. Id Transaksi: %d\nTanggal Transaksi: %s\nNama Pelanggan:%s\nPenanggung Jawab:%s\nDetail Barang:\n", i+1, val.Id, val.Tanggal.String(), val.CustomerName, val.EmplloyeName)
 				items, _ := interfacet.GetListItemByid(val.Id)
 				for j, val2 := range items {
 					fmt.Printf("\t%d. Nama Produk: %s\n\tJumlah Produk: %d\n\tHarga Produk:%d\n", j+1, val2.ProdukName, val2.Qty, val2.Price)

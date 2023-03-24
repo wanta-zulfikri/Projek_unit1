@@ -10,4 +10,5 @@ type Transaksi struct {
 	CustomerName string
 	PhoneNum     string
 	AddressCus   string
+	EmplloyeName string
 }
