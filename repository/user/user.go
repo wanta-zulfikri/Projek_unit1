@@ -4,6 +4,7 @@ import "github.com/wanta-zulfikri/Projek_unit1/entities"
 
 type UserInterface interface {
 	FindByUsername(username string) (*entities.User, error)
+	CheckifDeleted(username string) error
 	InsertLog(oldusername, newusername string) error
 	GetAllByRoleLimit(role string, offset int) ([]*entities.User, error)
 	GetAllByRole(role string) ([]*entities.User, error)

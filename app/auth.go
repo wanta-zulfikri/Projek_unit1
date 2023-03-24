@@ -35,6 +35,17 @@ func (app *App) Login() {
 		app.Home()
 
 	}
+	err1 := app.usersRepo.CheckifDeleted(username)
+	if err1 != nil {
+		fmt.Println(err1)
+		fmt.Print("Login Lagi? (y/t): ")
+		fmt.Scanln(&Repeatlogin)
+		if Repeatlogin == "y" {
+			app.Login()
+
+		}
+		app.Home()
+	}
 	app.Session[data.Username] = data
 	if data.Role == "admin" {
 		app.HomeAdmin()

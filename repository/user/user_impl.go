@@ -31,6 +31,19 @@ func (u *User) FindByUsername(username string) (*entities.User, error) {
 	return res, nil
 }
 
+func (u *User) CheckifDeleted(username string) error {
+	res := &entities.User{}
+	row := u.db.QueryRow("SELECT id,user_name,password,role FROM user WHERE deleted_at IS NULL AND user_name=?", username)
+	if row.Err() != nil {
+		return errors.New("Akun Tidak Aktif")
+	}
+	err := row.Scan(&res.Id, &res.Username, &res.Password, &res.Role)
+	if err != nil {
+		return errors.New("Akun Tidak Aktif")
+	}
+	return nil
+}
+
 func (u *User) GetAllByRole(role string) ([]*entities.User, error) {
 	res := []*entities.User{}
 	rows, err := u.db.Query("SELECT id,user_name,password,role FROM user WHERE role=? AND deleted_at IS NULL", role)
