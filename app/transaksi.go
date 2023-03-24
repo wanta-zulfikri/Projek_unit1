@@ -326,7 +326,6 @@ func (trx *App) CreateTransaction() {
 				repeat = false
 				newqty = datas[toint].Qty - qty
 			} else {
-
 				fmt.Printf("Jumlah stok pada produk %s hanya tersisa %d\n", datas[toint].Nama_produk, datas[toint].Qty)
 			}
 		}
@@ -341,7 +340,7 @@ func (trx *App) CreateTransaction() {
 		trx.IsNext = false
 		delete(trx.Cache, "cus")
 		trx.CreateTransaction()
-		return
+
 	}
 	helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 	trx.IsNext = false
@@ -356,22 +355,23 @@ func (trx *App) CreateTransaction() {
 
 func (trx *App) ListTransaction() {
 	var choice string
-	fmt.Print("\x1bc")
+	fmt.Println("\x1bc")
 	fmt.Println("========List Transaksi=========")
 	key := helper.GetUser(trx.Session)
 	var lenght []*entities.Transaksi
 	var datas []*entities.Transaksi
+	lenght, _ = trx.TrxRepo.GetAllByUid(trx.Session[key].Id)
+	datas, _ = trx.TrxRepo.GetWithLimitByUid(trx.Session[key].Id, trx.OffsetContent)
+	fmt.Println(lenght, datas)
 	if trx.Session[key].Role == "admin" {
 		lenght, _ = trx.TrxRepo.GetAll()
 		datas, _ = trx.TrxRepo.GetWithLimit(trx.OffsetContent)
-	} else {
-		lenght, _ = trx.TrxRepo.GetAllByUid(trx.Session[key].Id)
-		datas, _ = trx.TrxRepo.GetWithLimitByUid(trx.Session[key].Id, trx.OffsetContent)
 	}
+
 	page := helper.CalculatePage(len(lenght))
 	if len(lenght) == 0 {
 		fmt.Println("Data Transaksi Belum Ada")
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Second * 2)
 		if trx.Session[key].Role == "admin" {
 			trx.HomeAdmin()
 		}
@@ -385,7 +385,7 @@ func (trx *App) ListTransaction() {
 			trx.PageContent++
 			trx.OffsetContent += config.LimitPage
 			trx.ListTransaction()
-			return
+
 		}
 		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 		if trx.Session[key].Role == "admin" {
@@ -399,7 +399,7 @@ func (trx *App) ListTransaction() {
 			trx.PageContent--
 			trx.OffsetContent -= config.LimitPage
 			trx.ListTransaction()
-			return
+
 		}
 		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 		if trx.Session[key].Role == "admin" {
@@ -407,6 +407,14 @@ func (trx *App) ListTransaction() {
 		}
 		trx.HomePegawai()
 	}
+	fmt.Print("Tekan Enter jika ingin kembali: ")
+	fmt.Scanln()
+	helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
+	if trx.Session[key].Role == "admin" {
+		trx.HomeAdmin()
+	}
+	trx.HomePegawai()
+
 }
 
 func (trx *App) DeleteTransaction() {
@@ -420,7 +428,6 @@ func (trx *App) DeleteTransaction() {
 		fmt.Println("Data Transaksi Belum Ada")
 		time.Sleep(time.Second * 3)
 		trx.HomeAdmin()
-
 	}
 	helper.PrintData(datas, trx.TrxRepo)
 	if page > trx.PageContent {
@@ -430,7 +437,7 @@ func (trx *App) DeleteTransaction() {
 			trx.PageContent++
 			trx.OffsetContent += config.LimitPage
 			trx.DeleteTransaction()
-			return
+
 		}
 	} else if trx.PageContent != 1 || (trx.PageContent == page && page > 1) {
 		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Ingin Kembali Tekan Enter: ")
@@ -473,7 +480,7 @@ func (trx *App) DeleteTransaction() {
 			fmt.Println("Masukan Data Yang benar")
 			time.Sleep(2 * time.Second)
 			trx.DeleteTransaction()
-			return
+
 		}
 		fmt.Println("Berhasil Mengapus Data")
 		fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
@@ -505,7 +512,7 @@ func (trx *App) DeleteTransaction() {
 		fmt.Println("Masukan Data Yang Benar!!!")
 		time.Sleep(time.Second * 2)
 		trx.DeleteTransaction()
-		return
+
 	}
 	fmt.Println("Berhasil Mengahapus Data")
 	fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
@@ -513,7 +520,7 @@ func (trx *App) DeleteTransaction() {
 	if choice == "y" {
 		helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 		trx.DeleteCustomer()
-		return
+
 	}
 	helper.ResetValue(&trx.PageContent, &trx.OffsetContent, 1, 0)
 	fmt.Println("Anda akan diarahkan ke halaman utama")

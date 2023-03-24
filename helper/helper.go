@@ -59,7 +59,7 @@ func PrintData(datas ...interface{}) {
 				for j, val2 := range items {
 					fmt.Printf("\t%d. Nama Produk: %s\n\tJumlah Produk: %d\n\tHarga Produk:%d\n", j+1, val2.ProdukName, val2.Qty, val2.Price)
 				}
-				fmt.Print("\n\n")
+				fmt.Println()
 			}
 		}
 	}

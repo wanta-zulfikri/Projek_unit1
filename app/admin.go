@@ -34,22 +34,21 @@ func (admin *App) HomeAdmin() {
 	switch choice {
 	case 1:
 		admin.TambahPegawai()
-		return
+
 	case 2:
 		admin.UpdatePegawai()
-		return
+
 	case 3:
 		admin.HapusPegawai()
-		return
+
 	case 4:
 		admin.TambahCustomer()
-		return
+
 	case 5:
 		admin.DeleteCustomer()
-		return
+
 	case 6:
 		admin.TambahProduk()
-		return
 
 	case 7:
 		admin.UpdateProduk()
@@ -87,12 +86,12 @@ func (admin *App) TambahPegawai() {
 		fmt.Scanln(&Repeatlogin)
 		if Repeatlogin == "y" {
 			admin.TambahPegawai()
-			return
+
 		}
 		fmt.Println("Anda akan diarahkan ke halaman utama")
 		time.Sleep(time.Second * 3)
 		admin.HomeAdmin()
-		return
+
 	}
 	fmt.Print("Masukan Password: ")
 	fmt.Scanln(&password)
@@ -104,7 +103,7 @@ func (admin *App) TambahPegawai() {
 	fmt.Println("Berhasil menambahkan pegawai, anda akan di arahkan ke halaman utama")
 	time.Sleep(time.Second * 3)
 	admin.HomeAdmin()
-	return
+
 }
 func (admin *App) HapusPegawai() {
 	var choice string
@@ -120,10 +119,10 @@ func (admin *App) HapusPegawai() {
 		fmt.Scanln(&choice)
 		if choice == "y" {
 			admin.TambahPegawai()
-			return
+
 		}
 		admin.HomeAdmin()
-		return
+
 	}
 	helper.PrintData(datas)
 	if page > admin.PageContent {
@@ -133,7 +132,7 @@ func (admin *App) HapusPegawai() {
 			admin.PageContent++
 			admin.OffsetContent += config.LimitPage
 			admin.HapusPegawai()
-			return
+
 		}
 	} else if admin.PageContent != 1 || (admin.PageContent == page && page > 1) {
 		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
@@ -142,7 +141,7 @@ func (admin *App) HapusPegawai() {
 			admin.PageContent--
 			admin.OffsetContent -= config.LimitPage
 			admin.HapusPegawai()
-			return
+
 		}
 	}
 	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Dihapus jika ingin sekaligus gunakan format (ex:1,2,3): ")
@@ -174,7 +173,7 @@ func (admin *App) HapusPegawai() {
 			fmt.Println("Masukan Data Yang benar")
 			time.Sleep(2 * time.Second)
 			admin.HapusPegawai()
-			return
+
 		}
 		fmt.Println("Berhasil Mengapus Data")
 		fmt.Print("Apakah Anda Ingin Melanjutkan (y/t)")
@@ -182,13 +181,13 @@ func (admin *App) HapusPegawai() {
 		if choice == "y" {
 			helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 			admin.HapusPegawai()
-			return
+
 		}
 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 		fmt.Println("Anda Akan diarahkan ke menu dashboard")
 		time.Sleep(time.Second * 2)
 		admin.HomeAdmin()
-		return
+
 	}
 	err := admin.usersRepo.Delete(datas[helper.ConvertStringToInt(choice)-1].Id)
 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
@@ -196,7 +195,7 @@ func (admin *App) HapusPegawai() {
 		fmt.Println("Masukan Data Yang Benar!!!")
 		time.Sleep(time.Second * 2)
 		admin.HapusPegawai()
-		return
+
 	}
 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 	fmt.Println("Berhasil Mengahapus Data")
@@ -205,7 +204,7 @@ func (admin *App) HapusPegawai() {
 	if choice == "y" {
 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 		admin.HapusPegawai()
-		return
+
 	}
 	helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 	fmt.Println("Anda akan diarahkan ke halaman utama")
@@ -237,7 +236,7 @@ func (admin *App) LogAccountPegawai() {
 			admin.PageContent++
 			admin.OffsetContent += config.LimitPage
 			admin.LogAccountPegawai()
-			return
+
 		}
 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 		if admin.Session[key].Role == "admin" {
@@ -251,7 +250,7 @@ func (admin *App) LogAccountPegawai() {
 			admin.PageContent--
 			admin.OffsetContent -= config.LimitPage
 			admin.LogAccountPegawai()
-			return
+
 		}
 		helper.ResetValue(&admin.PageContent, &admin.OffsetContent, 1, 0)
 		if admin.Session[key].Role == "admin" {
@@ -275,10 +274,10 @@ func (admin *App) UpdatePegawai() {
 		fmt.Scanln(&choice)
 		if choice == "y" {
 			admin.TambahPegawai()
-			return
+
 		}
 		admin.HomeAdmin()
-		return
+
 	}
 	helper.PrintData(datas)
 	if page > admin.PageContent {
@@ -288,7 +287,7 @@ func (admin *App) UpdatePegawai() {
 			admin.PageContent++
 			admin.OffsetContent += config.LimitPage
 			admin.UpdatePegawai()
-			return
+
 		}
 	} else if admin.PageContent != 1 || (admin.PageContent == page && page > 1) {
 		fmt.Print("Tekan K Untuk Page Sebelumnya Dan Jika Tidak Tekan Enter: ")
@@ -297,7 +296,7 @@ func (admin *App) UpdatePegawai() {
 			admin.PageContent--
 			admin.OffsetContent -= config.LimitPage
 			admin.UpdatePegawai()
-			return
+
 		}
 	}
 	fmt.Print("Silahkan Pilih Pegawai Yang Ingin Di Update: ")
@@ -307,12 +306,12 @@ func (admin *App) UpdatePegawai() {
 		fmt.Scanln(&choice)
 		if choice == "y" {
 			admin.UpdatePegawai()
-			return
+
 		}
 		fmt.Println("Anda akan diarahkan ke halaman utama")
 		time.Sleep(3 * time.Second)
 		admin.HomeAdmin()
-		return
+
 	}
 	fmt.Print("Masukan Username Baru (Enter Untuk Skip) : ")
 	fmt.Scanln(&username)
@@ -325,12 +324,12 @@ func (admin *App) UpdatePegawai() {
 			fmt.Scanln(&choice)
 			if choice == "y" {
 				admin.UpdatePegawai()
-				return
+
 			}
 			fmt.Println("Anda akan diarahkan ke halaman utama")
 			time.Sleep(3 * time.Second)
 			admin.HomeAdmin()
-			return
+
 		}
 	}
 	fmt.Print("Masukan Password Baru Anda (Enter Untuk Skip): ")
@@ -345,21 +344,21 @@ func (admin *App) UpdatePegawai() {
 		fmt.Scanln(&choice)
 		if choice == "y" {
 			admin.UpdatePegawai()
-			return
+
 		}
 		fmt.Println("Anda akan diarahakan ke menu utama")
 		time.Sleep(3 * time.Second)
 		admin.HomeAdmin()
-		return
+
 	}
 	fmt.Print("Berhasil Mengupdate Data Pegawai, apakah anda ingin mencoba lagi? (y/t) :  ")
 	fmt.Scanln(&choice)
 	if choice == "y" {
 		admin.UpdatePegawai()
-		return
+
 	}
 	fmt.Println("Anda akan diarahakan ke menu utama")
 	time.Sleep(3 * time.Second)
 	admin.HomeAdmin()
-	return
+
 }

@@ -19,11 +19,8 @@ func (app *App) Login() {
 		fmt.Scanln(&Repeatlogin)
 		if Repeatlogin == "y" {
 			app.Login()
-			return
 		}
 		app.Home()
-		return
-
 	}
 	fmt.Printf("Password : ")
 	fmt.Scanln(&password)
@@ -33,20 +30,18 @@ func (app *App) Login() {
 		fmt.Scanln(&Repeatlogin)
 		if Repeatlogin == "y" {
 			app.Login()
-			return
+
 		}
 		app.Home()
-		return
 
 	}
 	app.Session[data.Username] = data
 	if data.Role == "admin" {
 		app.HomeAdmin()
-		return
 
 	}
 	app.HomePegawai()
-	return
+
 }
 
 func (app *App) Logout() {
