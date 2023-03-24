@@ -15,7 +15,7 @@ func TestMain(m *testing.M) {
 	dbb := db.InitDb()
 	cus = InitCustomer(dbb)
 	m.Run()
-	dbb.Exec(`DELETE FROM user WHERE user_name='ropel22'`)
+	dbb.Exec(`DELETE FROM customer WHERE no_hp='081232132'`)
 }
 
 func TestCreateCustomer(t *testing.T) {
@@ -39,6 +39,12 @@ func TestUpdateCustomer(t *testing.T) {
 	err2 := cus.Update(&entities.Customer{NoHp: "081232132"})
 	assert.Error(t, err2, "Jika gagal mengupdate customer")
 }
+func TestGetCustomer(t *testing.T) {
+	data, _ := cus.FindByPhone("081232132")
+	assert.Equal(t, "081232132", data.NoHp, "Jika terdapat data")
+	_, err := cus.FindByPhone("11111111111111111111111")
+	assert.Error(t, err, "Jika tidak terdapat data")
+}
 
 func TestDeleteCustomer(t *testing.T) {
 	data, _ := cus.FindByPhone("081232132")
@@ -47,11 +53,4 @@ func TestDeleteCustomer(t *testing.T) {
 	err2 := cus.Delete(9999)
 	assert.Error(t, err2, "Jika tidak berhasil delete customer")
 
-}
-
-func TestGetCustomer(t *testing.T) {
-	data, _ := cus.FindByPhone("081232132")
-	assert.Equal(t, "081232132", data.NoHp, "Jika terdapat data")
-	_, err := cus.FindByPhone("11111111111111111111111")
-	assert.Error(t, err, "Jika tidak terdapat data")
 }

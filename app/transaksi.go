@@ -362,7 +362,6 @@ func (trx *App) ListTransaction() {
 	var datas []*entities.Transaksi
 	lenght, _ = trx.TrxRepo.GetAllByUid(trx.Session[key].Id)
 	datas, _ = trx.TrxRepo.GetWithLimitByUid(trx.Session[key].Id, trx.OffsetContent)
-	fmt.Println(lenght, datas)
 	if trx.Session[key].Role == "admin" {
 		lenght, _ = trx.TrxRepo.GetAll()
 		datas, _ = trx.TrxRepo.GetWithLimit(trx.OffsetContent)
