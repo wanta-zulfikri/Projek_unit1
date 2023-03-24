@@ -46,6 +46,7 @@ func (app *App) HomePegawai() {
 func (app *App) UpdateAccount() {
 	var username, password string
 	key := helper.GetUser(app.Session)
+	fmt.Print("\x1bc")
 	fmt.Println("=================Form Update Account===============")
 	fmt.Print("Masukan Username Baru (Tekan Enter Untuk Skip): ")
 	fmt.Scanln(&username)
