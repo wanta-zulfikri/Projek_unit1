@@ -11,7 +11,7 @@ import (
 )
 
 func InitDb() *sql.DB {
-	db, err := sql.Open(config.DbDriver, fmt.Sprintf("root:%s@tcp(localhost:%s)/%s?parseTime=true", config.DbPassword, config.DbPort, config.DBname))
+	db, err := sql.Open(config.DbDriver, fmt.Sprintf(`root:%s@tcp(localhost:%s)/%s?parseTime=true&loc=Asia%%2FJakarta`, config.DbPassword, config.DbPort, config.DBname))
 	helper.PanicIfError(err)
 	db.SetMaxOpenConns(20)
 	db.SetMaxIdleConns(5)

@@ -50,7 +50,7 @@ func (app *App) UpdateAccount() {
 	fmt.Print("Masukan Username Baru (Tekan Enter Untuk Skip): ")
 	fmt.Scanln(&username)
 	if username == "" {
-		username = app.Session[key].Password
+		username = app.Session[key].Username
 	} else {
 		if username != app.Session[key].Username {
 			_, err := app.usersRepo.FindByUsername(username)
