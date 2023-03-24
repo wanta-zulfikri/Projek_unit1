@@ -34,14 +34,14 @@ func (trx *Transaksi) Create(data *entities.Transaksi) (error, int) {
 
 func (trx *Transaksi) GetWithLimit(offset int) ([]*entities.Transaksi, error) {
 	res := []*entities.Transaksi{}
-	rows, err := trx.db.Query(fmt.Sprintf("SELECT t.id,t.user_id,t.tgl_transaksi,t.customer_id,c.nama,c.alamat,c.no_hp FROM transaksi t JOIN customer c ON t.customer_id=c.id WHERE t.deleted_at IS NULL LIMIT %d OFFSET %d", config.LimitPage, offset))
+	rows, err := trx.db.Query(fmt.Sprintf("SELECT t.id,t.user_id,t.tgl_transaksi,t.customer_id,c.nama,c.alamat,c.no_hp,u.user_name FROM transaksi t JOIN customer c ON t.customer_id=c.id JOIN user u ON t.user_id=u.id WHERE t.deleted_at IS NULL LIMIT %d OFFSET %d", config.LimitPage, offset))
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		row := &entities.Transaksi{}
-		err := rows.Scan(&row.Id, &row.UserId, &row.Tanggal, &row.CustomerId, &row.CustomerName, &row.AddressCus, &row.PhoneNum)
+		err := rows.Scan(&row.Id, &row.UserId, &row.Tanggal, &row.CustomerId, &row.CustomerName, &row.AddressCus, &row.PhoneNum, &row.EmplloyeName)
 		if err != nil {
 			return nil, err
 		}
@@ -70,14 +70,14 @@ func (trx *Transaksi) GetAllByUid(userid int) ([]*entities.Transaksi, error) {
 
 func (trx *Transaksi) GetWithLimitByUid(userid, offset int) ([]*entities.Transaksi, error) {
 	res := []*entities.Transaksi{}
-	rows, err := trx.db.Query(fmt.Sprintf(`SELECT t.id,t.user_id,t.tgl_transaksi,t.customer_id,c.nama,c.alamat,c.no_hp FROM transaksi t JOIN customer c ON t.customer_id=c.id WHERE t.deleted_at IS NULL AND t.user_id=? LIMIT %d OFFSET %d`, config.LimitPage, offset), userid)
+	rows, err := trx.db.Query(fmt.Sprintf(`SELECT t.id,t.user_id,t.tgl_transaksi,t.customer_id,c.nama,c.alamat,c.no_hp,u.user_name FROM transaksi t JOIN customer c ON t.customer_id=c.id JOIN user u ON t.user_id=u.id WHERE t.deleted_at IS NULL AND t.user_id=? LIMIT %d OFFSET %d`, config.LimitPage, offset), userid)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		row := &entities.Transaksi{}
-		err := rows.Scan(&row.Id, &row.UserId, &row.Tanggal, &row.CustomerId, &row.CustomerName, &row.AddressCus, &row.PhoneNum)
+		err := rows.Scan(&row.Id, &row.UserId, &row.Tanggal, &row.CustomerId, &row.CustomerName, &row.AddressCus, &row.PhoneNum, &row.EmplloyeName)
 		if err != nil {
 			return nil, err
 		}

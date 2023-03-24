@@ -104,7 +104,6 @@ func (u *User) Create(data *entities.User) error {
 		return err
 	}
 	rowaff, _ := res.RowsAffected()
-	fmt.Println(rowaff, "ini err")
 	if rowaff > 0 {
 		return nil
 	}

@@ -53,11 +53,10 @@ func (app *App) Home() {
 	switch choice {
 	case 1:
 		app.Login()
-		return
 
 	default:
 		*app.MainChoice = choice
-		return
+
 	}
 
 }
